@@ -50,7 +50,6 @@ public class SnowballSpawner : MonoBehaviour
         {
             if (hit.collider.CompareTag("Snowman"))
             {
-                Debug.Log("눈사람 위엔 생성하지 않음");
                 return;
             }
 
@@ -59,7 +58,6 @@ public class SnowballSpawner : MonoBehaviour
         }
         else
         {
-            Debug.Log("Raycast 실패");
         }
     }
 

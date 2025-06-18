@@ -1,12 +1,11 @@
-// ✅ Snowball.cs
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(XRGrabInteractable))] // XR Grab 기능
+[RequireComponent(typeof(XRGrabInteractable))]
 public class Snowball : MonoBehaviour
 {
-    public float growthRate = 0.04f; // 1초당 4cm 성장
+    public float growthRate = 0.04f; 
     public float maxSize = 2.0f;
     public GameObject snowmanPrefab;
 
@@ -28,14 +27,13 @@ public class Snowball : MonoBehaviour
         rb.isKinematic = false;
         rb.useGravity = true;
 
-        // XRGrab 세팅
         grabInteractable = GetComponent<XRGrabInteractable>();
         grabInteractable.throwOnDetach = true;
         grabInteractable.trackPosition = true;
         grabInteractable.trackRotation = true;
         grabInteractable.movementType = XRBaseInteractable.MovementType.VelocityTracking;
 
-        grabInteractable.selectExited.AddListener(OnRelease); // ❗ 던지기 이벤트 연결
+        grabInteractable.selectExited.AddListener(OnRelease);
     }
 
     void OnDestroy()
@@ -56,7 +54,6 @@ public class Snowball : MonoBehaviour
         }
         else if (grabInteractable.isSelected)
         {
-            // XR로 잡힌 상태에서는 이동 중지
             followTarget = null;
             rb.velocity = Vector3.zero;
         }
@@ -64,7 +61,7 @@ public class Snowball : MonoBehaviour
 
     void Update()
     {
-        if (!isGrowing || grabInteractable.isSelected) return; // 잡힌 상태에선 성장 중단
+        if (!isGrowing || grabInteractable.isSelected) return;
         if (transform.localScale.x >= maxSize) return;
 
         bool onSnow = IsTouchingSnow();
@@ -100,18 +97,16 @@ public class Snowball : MonoBehaviour
                 {
                     if (snowmanPrefab == null)
                     {
-                        Debug.LogError("❌ snowmanPrefab 연결 안됨");
                         return;
                     }
 
-                    Vector3 spawnPos = new Vector3(center.x, 0.8f, center.z);  // ✅ 추가 보정 없음!
+                    Vector3 spawnPos = new Vector3(center.x, 0.8f, center.z); 
                     Instantiate(snowmanPrefab, spawnPos, Quaternion.identity);
                     Destroy(gameObject);
                     Destroy(collision.gameObject);
                 }
                 else
                 {
-                    Debug.LogWarning("바닥 인식 실패");
                 }
             }
         }
@@ -119,9 +114,7 @@ public class Snowball : MonoBehaviour
 
     void OnRelease(SelectExitEventArgs args)
     {
-        // 던지기 시 followTarget 비활성화 유지
         followTarget = null;
         isGrowing = false;
-        Debug.Log("🎯 눈덩이 던져짐");
     }
 }
